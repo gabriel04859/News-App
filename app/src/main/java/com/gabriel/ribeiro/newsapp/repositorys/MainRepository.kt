@@ -5,9 +5,8 @@ import com.gabriel.ribeiro.newsapp.models.responses.NewResponse
 import com.gabriel.ribeiro.newsapp.utils.Constants.Companion.API_KEY
 import retrofit2.Response
 
-interface HeadlineRepository {
+interface MainRepository {
 
-
-    suspend fun getHeadlines(country: String, pageNumber: Int, apiKey: String = API_KEY) :Response<NewResponse>
+    suspend fun getHeadlines(country: String, pageNumber: Int) :Response<NewResponse>
 
 }

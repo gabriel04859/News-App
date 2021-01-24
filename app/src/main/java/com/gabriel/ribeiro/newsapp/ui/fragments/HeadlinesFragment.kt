@@ -1,6 +1,5 @@
 package com.gabriel.ribeiro.newsapp.ui.fragments
 
-import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -8,49 +7,69 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
+import com.gabriel.ribeiro.newsapp.MainActivity
 import com.gabriel.ribeiro.newsapp.R
-import com.gabriel.ribeiro.newsapp.api.DataSource
-import com.gabriel.ribeiro.newsapp.api.NewsApi
-import com.gabriel.ribeiro.newsapp.repositorys.HeadlineRepositoryImplemented
-import com.gabriel.ribeiro.newsapp.ui.viewmodels.HeadlinesViewModel
-import com.gabriel.ribeiro.newsapp.ui.viewmodels.factors.HeadlinesFactors
+import com.gabriel.ribeiro.newsapp.databinding.ArticuleFragmentBinding
+import com.gabriel.ribeiro.newsapp.databinding.HeadlinesFragmentBinding
+import com.gabriel.ribeiro.newsapp.models.Article
+import com.gabriel.ribeiro.newsapp.ui.HeadLinesAdapter
+import com.gabriel.ribeiro.newsapp.ui.viewmodels.MainViewModel
+import com.gabriel.ribeiro.newsapp.utils.Constants
 import com.gabriel.ribeiro.newsapp.utils.Result
 
-class HeadlinesFragment : Fragment() {
+class HeadlinesFragment : Fragment(R.layout.headlines_fragment), HeadLinesAdapter.OnArticleClickListener {
 
-    private lateinit var viewModel: HeadlinesViewModel
+    private lateinit var binding : HeadlinesFragmentBinding
+    private lateinit var mainViewModel: MainViewModel
+    private lateinit var headLinesAdapter: HeadLinesAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.headlines_fragment, container, false)
+    ): View {
+        binding = HeadlinesFragmentBinding.inflate(inflater,container,false)
+        return binding.root
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        mainViewModel = (activity as MainActivity).mainViewModel
+        headLinesAdapter = HeadLinesAdapter(this)
+    }
 
+    override fun onStart() {
+        observer()
+        super.onStart()
+    }
 
-        val viewModelFactory = HeadlinesFactors(HeadlineRepositoryImplemented(DataSource()))
-        viewModel = ViewModelProvider(this,viewModelFactory).get(HeadlinesViewModel::class.java)
+    private fun observer(){
+        binding.recyclerViewHeadlines.adapter = headLinesAdapter
+        mainViewModel.headLines.observe(viewLifecycleOwner, Observer { result ->
+            when(result){
+                is Result.Loading -> {Log.i(Constants.TAG, "Loading...")}
+                is Result.Failure -> {
+                    Log.i(Constants.TAG, "Error: ${result.message}")}
 
-        viewModel.getAllArticles()
-        viewModel.newResponses.observe(viewLifecycleOwner, Observer {
-            when(it){
-               is Result.Success -> {
-                   Log.i("TESTE","${it.data?.articles}")
-
-               }
-                is Result.Failure ->{
-                    Log.i("TESTE","${ it.exception?.message}")
-
-                }
-                is Result.Loading -> {
-                    Log.i("TESTE","Carregando")
-
+                is Result.Success -> {
+                    result.data?.let {
+                        headLinesAdapter.differ.submitList(it.articles)
+                    }
                 }
             }
+
+
+
         })
+
+
+    }
+
+    override fun onDestroy() {
+
+        super.onDestroy()
+    }
+
+    override fun onArticleClicked(article: Article) {
 
     }
 
