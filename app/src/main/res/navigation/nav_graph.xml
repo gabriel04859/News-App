@@ -8,7 +8,7 @@
     <fragment
         android:id="@+id/headlinesFragment"
         android:name="com.gabriel.ribeiro.newsapp.ui.fragments.HeadlinesFragment"
-        android:label="headlines_fragment"
+        android:label="@string/principais"
         tools:layout="@layout/headlines_fragment" >
         <action
             android:id="@+id/action_headlinesFragment_to_articuleFragment"
@@ -17,12 +17,19 @@
     <fragment
         android:id="@+id/articuleFragment"
         android:name="com.gabriel.ribeiro.newsapp.ui.fragments.ArticuleFragment"
-        android:label="articule_fragment"
-        tools:layout="@layout/articule_fragment" />
+        android:label="Detalhes"
+        tools:layout="@layout/articule_fragment" >
+        <argument
+            android:name="article"
+            app:argType="com.gabriel.ribeiro.newsapp.models.Article" />
+        <action
+            android:id="@+id/action_articuleFragment_to_savedFragment"
+            app:destination="@id/savedFragment" />
+    </fragment>
     <fragment
         android:id="@+id/savedFragment"
         android:name="com.gabriel.ribeiro.newsapp.ui.fragments.SavedFragment"
-        android:label="saved_fragment"
+        android:label="Suas notícias"
         tools:layout="@layout/saved_fragment" >
         <action
             android:id="@+id/action_savedFragment_to_articuleFragment"
@@ -31,7 +38,7 @@
     <fragment
         android:id="@+id/searchFragment"
         android:name="com.gabriel.ribeiro.newsapp.ui.fragments.SearchFragment"
-        android:label="search_fragment"
+        android:label="Pesquisar"
         tools:layout="@layout/search_fragment" >
         <action
             android:id="@+id/action_searchFragment_to_articuleFragment"

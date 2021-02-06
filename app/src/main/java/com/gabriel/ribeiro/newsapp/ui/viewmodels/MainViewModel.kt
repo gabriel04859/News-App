@@ -8,53 +8,54 @@ import androidx.lifecycle.viewModelScope
 import com.gabriel.ribeiro.newsapp.models.Article
 import com.gabriel.ribeiro.newsapp.models.responses.NewResponse
 import com.gabriel.ribeiro.newsapp.repositorys.MainRepository
-import com.gabriel.ribeiro.newsapp.utils.Result
-import kotlinx.coroutines.Dispatchers
+import com.gabriel.ribeiro.newsapp.utils.Constants.Companion.TAG
+import com.gabriel.ribeiro.newsapp.utils.Resource
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import retrofit2.Response
-import kotlin.Exception
 
 class MainViewModel(private val mainRepository: MainRepository) : ViewModel(){
-    var headLines = MutableLiveData<Result<NewResponse>>()
+    private var _headLines = MutableLiveData<Resource<NewResponse>>()
+    val headLines : LiveData<Resource<NewResponse>> get() = _headLines
+    var breakingNewsResponse : NewResponse? = null
+
+    private var _searchNews = MutableLiveData<Resource<NewResponse>>()
+    val searchNews : LiveData<Resource<NewResponse>> get() = _searchNews
+    var searchNewsResponse : NewResponse? = null
 
     init {
-        getHeadlines("us")
+        getHeadlines()
     }
-    private fun getHeadlines(countryCode : String) = viewModelScope.launch {
-        headLines.postValue(Result.Loading())
+     fun getHeadlines(countryCode  : String = "br") = viewModelScope.launch {
+        _headLines.postValue(Resource.Loading())
         val response = mainRepository.getHeadlines(countryCode,1)
-        headLines.postValue(handlerHeadLines(response))
+        _headLines.postValue(handlerHeadLines(response))
+
     }
 
-    private fun handlerHeadLines(response: Response<NewResponse>) : Result<NewResponse>{
+    fun searchForNews(query : String, pageNumber : Int = 1) = viewModelScope.launch {
+        _searchNews.postValue(Resource.Loading())
+       val response = mainRepository.searchForNews(query,pageNumber)
+        _searchNews.postValue(handlerHeadLines(response))
+    }
+
+    private fun handlerHeadLines(response: Response<NewResponse>) : Resource<NewResponse>{
             if (response.isSuccessful){
                 response.body()?.let {
-                    return  Result.Success(it)
+                    Log.d(TAG, "handlerHeadLines: $it")
+                    return  Resource.Success(it)
                 }
             }
-        return Result.Failure(message = response.message())
-
+        return Resource.Failure(message = response.message())
     }
-    /*fun getAllArticles() : LiveData<Result<List<Article>>>{
-        viewModelScope.launch(Dispatchers.IO){
-            val response = mainRepository.getHeadlines("us",1)
-            try{
-                newResponses.postValue(Result.Loading())
-                if (response.isSuccessful){
-                    response.body()?.let {
-                        newResponses.postValue(Result.Success(it.articles))
-                    }
-                }
 
-            }catch (e : Exception){
-                withContext(Dispatchers.Main){
-                    newResponses.value = Result.Failure(e)
-                }
-            }
-        }
-        return newResponses
-    }*/
+    fun saveArticle(article: Article) = viewModelScope.launch {
+        mainRepository.saveArticle(article)
+    }
 
+    fun deleteArticle(article: Article) = viewModelScope.launch {
+        mainRepository.deleteArticle(article)
+    }
+
+    fun getArticlesSaved() = mainRepository.getAllArticleSaved()
 
 }

@@ -2,11 +2,13 @@ package com.gabriel.ribeiro.newsapp
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.ActionBar
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.gabriel.ribeiro.newsapp.api.DataSource
+import com.gabriel.ribeiro.newsapp.database.ArticleDatabase
 import com.gabriel.ribeiro.newsapp.databinding.ActivityMainBinding
 import com.gabriel.ribeiro.newsapp.repositorys.MainRepositoryImplemented
 import com.gabriel.ribeiro.newsapp.ui.viewmodels.MainViewModel
@@ -22,10 +24,11 @@ class MainActivity : AppCompatActivity() {
         _binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+
         navController = findNavController(R.id.nav_host_fragment)
         binding.bottomNavigationView.setupWithNavController(navController)
 
-        val mainViewModelFactory = MainViewModelFactory(MainRepositoryImplemented(DataSource()))
+        val mainViewModelFactory = MainViewModelFactory(MainRepositoryImplemented(DataSource(ArticleDatabase(this))))
         mainViewModel = ViewModelProvider(this, mainViewModelFactory).get(MainViewModel::class.java)
 
 

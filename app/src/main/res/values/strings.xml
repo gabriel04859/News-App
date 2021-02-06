@@ -1,6 +1,11 @@
 <resources>
-    <string name="app_name">NewsApp</string>
+    <string name="app_name">Últimas notícias</string>
     <string name="headlines">Headlines</string>
     <string name="saved">Saved</string>
     <string name="search">Search</string>
+    <string name="pesquise">Pesquise</string>
+    <string name="principais_do_dia">Principais do dia</string>
+    <string name="principais">Principais</string>
+    <string name="salvo_com_sucesso">Salvo com sucesso</string>
+    <string name="deletado_com_sucesso">Deletado com sucesso</string>
 </resources>

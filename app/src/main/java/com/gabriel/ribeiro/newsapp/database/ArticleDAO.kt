@@ -8,11 +8,11 @@ import com.gabriel.ribeiro.newsapp.models.Article
 interface ArticleDAO {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertArticle(article: Article) : Long
+    suspend fun saveArticle(article: Article) : Long
 
     @Query("SELECT * FROM articles")
-    fun getAllArticles() : LiveData<List<Article>>
+    fun getAllArticlesSaved() : LiveData<List<Article>>
 
     @Delete
-    fun deleteArticle(article: Article)
+    suspend fun deleteArticle(article: Article)
 }

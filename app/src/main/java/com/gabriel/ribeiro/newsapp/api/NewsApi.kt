@@ -8,12 +8,12 @@ import retrofit2.http.Query
 
 interface NewsApi {
     @GET("top-headlines")
-    suspend fun getHeadlines(@Query("country") country : String = "us",
+    suspend fun getHeadlines(@Query("country") country : String = "br",
                             @Query("page") pageNumber : Int = 1,
                             @Query("apiKey") apiKey : String = API_KEY) : Response<NewResponse>
 
     @GET("everything")
-    suspend fun searForNews(@Query("q") searchQuery : String,
-                            @Query("page") pageNumber : Int = 1,
+    suspend fun searForNews(@Query("q") q : String,
+                            @Query("page") pageNumber: Int = 1,
                             @Query("apiKey") apiKey : String = API_KEY) : Response<NewResponse>
 }
