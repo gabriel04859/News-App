@@ -7,14 +7,18 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.webkit.WebViewClient
+import android.widget.AbsListView
 import androidx.lifecycle.ViewModel
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.gabriel.ribeiro.newsapp.MainActivity
 import com.gabriel.ribeiro.newsapp.R
 import com.gabriel.ribeiro.newsapp.databinding.ArticuleFragmentBinding
 import com.gabriel.ribeiro.newsapp.models.Article
 import com.gabriel.ribeiro.newsapp.ui.viewmodels.MainViewModel
+import com.gabriel.ribeiro.newsapp.utils.Constants.Companion.QUERY_PAGE_SIZE
 import com.gabriel.ribeiro.newsapp.utils.Constants.Companion.TAG
 import com.google.android.material.snackbar.Snackbar
 
@@ -54,6 +58,8 @@ class ArticuleFragment : Fragment(R.layout.articule_fragment) {
         }
 
     }
+
+
 
 
     override fun onDestroy() {
