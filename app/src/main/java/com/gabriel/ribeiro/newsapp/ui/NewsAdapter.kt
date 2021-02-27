@@ -59,6 +59,7 @@ class NewsAdapter(private val onArticleClickListener: OnArticleClickListener? = 
 
     interface OnArticleClickListener {
         fun onArticleClicked (article: Article)
+
     }
 
     override fun getItemCount() = differ.currentList.size

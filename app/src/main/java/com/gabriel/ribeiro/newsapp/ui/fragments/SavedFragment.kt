@@ -23,7 +23,7 @@ class SavedFragment : Fragment(R.layout.saved_fragment), NewsAdapter.OnArticleCl
 
     private var _binding : SavedFragmentBinding? = null
     private val binding : SavedFragmentBinding get() = _binding!!
-    private lateinit var mainViewModel : MainViewModel
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -36,16 +36,13 @@ class SavedFragment : Fragment(R.layout.saved_fragment), NewsAdapter.OnArticleCl
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        mainViewModel = (activity as MainActivity).mainViewModel
+
         val newsAdapter = NewsAdapter(this)
         val itemDividerItemDecoration = DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL)
         binding.recyclerSavedArticles.addItemDecoration(itemDividerItemDecoration)
         binding.recyclerSavedArticles.adapter = newsAdapter
-        mainViewModel.getArticlesSaved().observe(viewLifecycleOwner, Observer {articles ->
-            newsAdapter.differ.submitList(articles)
-        })
 
-        val itemTouchHelperCallback = object  : ItemTouchHelper.SimpleCallback(
+        /*val itemTouchHelperCallback = object  : ItemTouchHelper.SimpleCallback(
                 ItemTouchHelper.UP or ItemTouchHelper.DOWN,
                 ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT){
             override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder,
@@ -67,7 +64,7 @@ class SavedFragment : Fragment(R.layout.saved_fragment), NewsAdapter.OnArticleCl
         }
         ItemTouchHelper(itemTouchHelperCallback).apply {
             attachToRecyclerView(binding.recyclerSavedArticles)
-        }
+        }*/
     }
 
     override fun onDestroy() {

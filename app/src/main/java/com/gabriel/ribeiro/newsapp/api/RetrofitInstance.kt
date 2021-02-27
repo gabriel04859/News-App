@@ -1,6 +1,6 @@
 package com.gabriel.ribeiro.newsapp.api
 
-import com.gabriel.ribeiro.newsapp.utils.Constants.Companion.BASE_URL
+import com.gabriel.ribeiro.newsapp.utils.Constants.BASE_URL
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -22,7 +22,7 @@ class RetrofitInstance {
                 .build()
         }
 
-        val newsApi by lazy {
+        val newsApi: NewsApi by lazy {
             retrofitInstance.create(NewsApi::class.java)
         }
     }

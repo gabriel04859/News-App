@@ -10,27 +10,32 @@ import android.widget.AbsListView
 import android.widget.SearchView
 import android.widget.Toast
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.gabriel.ribeiro.newsapp.MainActivity
 import com.gabriel.ribeiro.newsapp.R
+import com.gabriel.ribeiro.newsapp.api.DataSource
+import com.gabriel.ribeiro.newsapp.database.ArticleDatabase
 import com.gabriel.ribeiro.newsapp.databinding.SearchFragmentBinding
 import com.gabriel.ribeiro.newsapp.models.Article
+import com.gabriel.ribeiro.newsapp.repositorys.MainRepositoryImplemented
 import com.gabriel.ribeiro.newsapp.ui.NewsAdapter
+import com.gabriel.ribeiro.newsapp.ui.viewmodels.HeadlinesViewModel
+import com.gabriel.ribeiro.newsapp.ui.viewmodels.SearchViewModel
 import com.gabriel.ribeiro.newsapp.utils.Constants
 import com.gabriel.ribeiro.newsapp.utils.Resource
 
 class SearchFragment : Fragment(R.layout.search_fragment), NewsAdapter.OnArticleClickListener {
     private lateinit var binding : SearchFragmentBinding
+
     private val newsAdapter by lazy {
         NewsAdapter(this)
     }
-    private val mainViewModel by lazy {
-        (activity as MainActivity).mainViewModel
-    }
-    private lateinit var searchQuery : String
+
+    private lateinit var searchViewModel : SearchViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -43,20 +48,26 @@ class SearchFragment : Fragment(R.layout.search_fragment), NewsAdapter.OnArticle
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupRecyclerView()
+
+        val factory = SearchViewModel.SearchViewModelFactory(MainRepositoryImplemented(
+                DataSource(ArticleDatabase(requireContext()))))
+        searchViewModel = ViewModelProvider(this, factory).get(SearchViewModel::class.java)
+
+
         binding.searchViewNews.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 query?.let {
-                    mainViewModel.searchForNews(query)
-                    searchQuery = query
+                    searchViewModel.searchForNews(query)
+
                 }
                 return false
             }
 
-            override fun onQueryTextChange(newText: String?): Boolean {
-                return false
-            }
+            override fun onQueryTextChange(newText: String?): Boolean { return false }
 
         })
+
+
         observerNews()
     }
 
@@ -65,65 +76,27 @@ class SearchFragment : Fragment(R.layout.search_fragment), NewsAdapter.OnArticle
             val dividerItemDecoration = DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL)
             addItemDecoration(dividerItemDecoration)
             adapter = newsAdapter
-            addOnScrollListener(this@SearchFragment.scrollListener)
+
         }
     }
 
     private fun observerNews(){
-
-        mainViewModel.searchNews.observe(viewLifecycleOwner, Observer { result ->
-            when(result){
+        searchViewModel.searchNews.observe(viewLifecycleOwner, Observer {
+            when (it) {
                 is Resource.Loading -> {
-                    Log.i(Constants.TAG, "Loading...")}
-                is Resource.Failure -> {
-                    Log.i(Constants.TAG, "Error: ${result.message}")}
-
-                is Resource.Success -> {
-                    result.data?.let {
-                        newsAdapter.differ.submitList(it.articles.toList())
-                        val totalPages = it.totalResults / Constants.QUERY_PAGE_SIZE + 2
-                        isLastPage = mainViewModel.searchNewsPage == totalPages
+                }
+                is Resource.Failure -> Log.d(Constants.TAG, "onViewCreated: Erro na search: ${it.message}")
+                is Resource.Success -> {Log.d(Constants.TAG, "onViewCreated: Articles: ${it.data?.articles} ")
+                    it.data?.let{newResponse ->
+                        newsAdapter.differ.submitList(newResponse.articles)
                     }
                 }
-            }
 
+
+            }
         })
 
-    }
 
-    var isLoading = false
-    var isLastPage = false
-    var isScrolling = false
-
-    var scrollListener = object : RecyclerView.OnScrollListener(){
-        override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-            super.onScrollStateChanged(recyclerView, newState)
-            if (newState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL){
-                isScrolling = true
-            }
-        }
-
-        override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-            super.onScrolled(recyclerView, dx, dy)
-            val layoutManager = recyclerView.layoutManager as LinearLayoutManager
-            val firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition()
-            val visibleItemCount = layoutManager.childCount
-            val totalItemCount = layoutManager.itemCount
-
-            val isNotLoadingAndNotLastPage = !isLoading && !isLastPage
-            val isLastItem= firstVisibleItemPosition + visibleItemCount >= totalItemCount
-            val isNotAtBeginning = firstVisibleItemPosition >= 0
-            val isTotalMoreThanVisible = totalItemCount >= Constants.QUERY_PAGE_SIZE
-            val shouldPaginate =isNotLoadingAndNotLastPage && isLastItem
-                    && isNotAtBeginning && isTotalMoreThanVisible && isScrolling
-
-            if (shouldPaginate){
-                mainViewModel.searchForNews(searchQuery)
-                isScrolling = false
-            }else{
-                binding.recyclerViewSearch.setPadding(0,0,0,0)
-            }
-        }
     }
 
     override fun onArticleClicked(article: Article) {

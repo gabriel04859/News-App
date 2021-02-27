@@ -6,7 +6,7 @@ import com.gabriel.ribeiro.newsapp.models.Article
 import com.gabriel.ribeiro.newsapp.models.responses.NewResponse
 import retrofit2.Response
 
-class MainRepositoryImplemented(private val dataSource: DataSource) : MainRepository {
+class MainRepositoryImplemented(private val dataSource: DataSource ) : MainRepository {
 
     override suspend fun getHeadlines(country: String, pageNumber: Int): Response<NewResponse> {
         return dataSource.getHeadlines(country, pageNumber)

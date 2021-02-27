@@ -1,7 +1,7 @@
 package com.gabriel.ribeiro.newsapp.api
 
 import com.gabriel.ribeiro.newsapp.models.responses.NewResponse
-import com.gabriel.ribeiro.newsapp.utils.Constants.Companion.API_KEY
+import com.gabriel.ribeiro.newsapp.utils.Constants.API_KEY
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Query

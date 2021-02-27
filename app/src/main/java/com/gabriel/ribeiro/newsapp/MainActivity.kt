@@ -18,7 +18,7 @@ class MainActivity : AppCompatActivity() {
     private var _binding : ActivityMainBinding? = null
     private val binding : ActivityMainBinding get() = _binding!!
     private lateinit var navController : NavController
-    lateinit var mainViewModel : MainViewModel
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         _binding = ActivityMainBinding.inflate(layoutInflater)
@@ -28,8 +28,7 @@ class MainActivity : AppCompatActivity() {
         navController = findNavController(R.id.nav_host_fragment)
         binding.bottomNavigationView.setupWithNavController(navController)
 
-        val mainViewModelFactory = MainViewModelFactory(MainRepositoryImplemented(DataSource(ArticleDatabase(this))))
-        mainViewModel = ViewModelProvider(this, mainViewModelFactory).get(MainViewModel::class.java)
+
 
 
 

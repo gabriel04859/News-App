@@ -18,8 +18,7 @@ import com.gabriel.ribeiro.newsapp.R
 import com.gabriel.ribeiro.newsapp.databinding.ArticuleFragmentBinding
 import com.gabriel.ribeiro.newsapp.models.Article
 import com.gabriel.ribeiro.newsapp.ui.viewmodels.MainViewModel
-import com.gabriel.ribeiro.newsapp.utils.Constants.Companion.QUERY_PAGE_SIZE
-import com.gabriel.ribeiro.newsapp.utils.Constants.Companion.TAG
+import com.gabriel.ribeiro.newsapp.utils.Constants.TAG
 import com.google.android.material.snackbar.Snackbar
 
 class ArticuleFragment : Fragment(R.layout.articule_fragment) {
@@ -42,7 +41,7 @@ class ArticuleFragment : Fragment(R.layout.articule_fragment) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        mainViewModel = (activity as MainActivity).mainViewModel
+
         article = args.article
         Log.d(TAG, "onViewCreated: Artigo: $article ")
         binding.webViewArticle.apply {
