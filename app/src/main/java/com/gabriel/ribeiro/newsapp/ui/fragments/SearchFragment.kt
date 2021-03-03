@@ -20,6 +20,7 @@ import com.gabriel.ribeiro.newsapp.models.Article
 import com.gabriel.ribeiro.newsapp.ui.NewsAdapter
 import com.gabriel.ribeiro.newsapp.ui.viewmodels.SearchViewModel
 import com.gabriel.ribeiro.newsapp.utils.Constants
+import com.gabriel.ribeiro.newsapp.utils.Constants.ARTICLE_SERIALIZABLE_KEY
 import com.gabriel.ribeiro.newsapp.utils.Resource
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -99,7 +100,7 @@ class SearchFragment : Fragment(R.layout.search_fragment), NewsAdapter.OnArticle
 
     override fun onArticleClicked(article: Article) {
         val bundle = Bundle().apply {
-            putSerializable("article", article)
+            putSerializable(ARTICLE_SERIALIZABLE_KEY, article)
         }
         findNavController().navigate(R.id.action_searchFragment_to_articuleFragment, bundle)
     }
