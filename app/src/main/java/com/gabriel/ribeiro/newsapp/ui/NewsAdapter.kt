@@ -12,7 +12,7 @@ import com.bumptech.glide.Glide
 import com.gabriel.ribeiro.newsapp.R
 import com.gabriel.ribeiro.newsapp.models.Article
 
-class NewsAdapter(private val onArticleClickListener: OnArticleClickListener? = null) : RecyclerView.Adapter<NewsAdapter.HeadLinesViewHolder>() {
+class NewsAdapter(private val onArticleClickListener: OnArticleClickListener) : RecyclerView.Adapter<NewsAdapter.HeadLinesViewHolder>() {
 
     inner class HeadLinesViewHolder(itemView : View) : RecyclerView.ViewHolder(itemView){
         val imageViewArticle : ImageView = itemView.findViewById(R.id.imageViewArticleItem)
@@ -50,7 +50,7 @@ class NewsAdapter(private val onArticleClickListener: OnArticleClickListener? = 
             holder.textViewPublishedAtItem.text = article.publishedAt
         }
         holder.itemView.setOnClickListener {
-            onArticleClickListener?.onArticleClicked(article)
+            onArticleClickListener.onArticleClicked(article)
         }
 
 

@@ -16,4 +16,10 @@ interface NewsApi {
     suspend fun searForNews(@Query("q") q : String,
                             @Query("page") pageNumber: Int = 1,
                             @Query("apiKey") apiKey : String = API_KEY) : Response<NewResponse>
+
+    @GET("top-headlines")
+    suspend fun getNewsForCategory(@Query("country") country: String,
+                                   @Query("category") category: String,
+                                   @Query("pageSize") pageSize: Int = 100,
+                                   @Query("apiKey") apiKey: String = API_KEY): Response<NewResponse>
 }

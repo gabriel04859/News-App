@@ -5,11 +5,11 @@ import com.gabriel.ribeiro.newsapp.models.Article
 import com.gabriel.ribeiro.newsapp.models.responses.NewResponse
 import retrofit2.Response
 
-interface MainRepository {
+interface HeadlinesRepository {
 
-    suspend fun getHeadlines(country: String, pageNumber: Int) :Response<NewResponse>
+    suspend fun getHeadlines(country: String, pageNumber: Int) : Response<NewResponse>
 
-    suspend fun searchForNews(searchQuery : String, pageNumber: Int) : Response<NewResponse>
+    suspend fun getNewsForCategory(country: String, category : String) : Response<NewResponse>
 
     suspend fun saveArticle(article: Article) : Long
 

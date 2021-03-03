@@ -7,29 +7,24 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.webkit.WebViewClient
-import android.widget.AbsListView
-import androidx.lifecycle.ViewModel
-import androidx.navigation.fragment.findNavController
-import androidx.navigation.fragment.navArgs
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.gabriel.ribeiro.newsapp.MainActivity
+import androidx.fragment.app.viewModels
 import com.gabriel.ribeiro.newsapp.R
 import com.gabriel.ribeiro.newsapp.databinding.ArticuleFragmentBinding
 import com.gabriel.ribeiro.newsapp.models.Article
-import com.gabriel.ribeiro.newsapp.ui.viewmodels.MainViewModel
+import com.gabriel.ribeiro.newsapp.ui.viewmodels.HeadlinesViewModel
+import com.gabriel.ribeiro.newsapp.utils.Constants.ARTICLE_SERIALIZABLE_KEY
 import com.gabriel.ribeiro.newsapp.utils.Constants.TAG
 import com.google.android.material.snackbar.Snackbar
+import dagger.hilt.android.AndroidEntryPoint
 
-class ArticuleFragment : Fragment(R.layout.articule_fragment) {
+@AndroidEntryPoint
+class ArticleFragment : Fragment(R.layout.articule_fragment) {
+
     private var _binding : ArticuleFragmentBinding? = null
     private val binding : ArticuleFragmentBinding get() = _binding!!
 
-    private lateinit var mainViewModel: MainViewModel
+    private val headlinesViewModel : HeadlinesViewModel by viewModels()
     private lateinit var article : Article
-    private val args : ArticuleFragmentArgs by navArgs()
-
-
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -42,7 +37,9 @@ class ArticuleFragment : Fragment(R.layout.articule_fragment) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        article = args.article
+        requireArguments().let {
+            article = (it.getSerializable(ARTICLE_SERIALIZABLE_KEY) as Article?)!!
+        }
         Log.d(TAG, "onViewCreated: Artigo: $article ")
         binding.webViewArticle.apply {
             webViewClient = WebViewClient()
@@ -50,7 +47,7 @@ class ArticuleFragment : Fragment(R.layout.articule_fragment) {
         }
 
         binding.floatingActionButtonSaveArticule.setOnClickListener {
-            mainViewModel.saveArticle(article)
+            headlinesViewModel.saveArticle(article)
             Snackbar.make(view,getString(R.string.salvo_com_sucesso),Snackbar.LENGTH_SHORT).show()
             Log.d(TAG, "onViewCreated: Salvo com sucesso: $article ")
 

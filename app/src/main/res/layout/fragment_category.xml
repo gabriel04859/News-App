@@ -4,20 +4,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".ui.fragments.HeadlinesFragment">
-
-    <include layout="@layout/button_category"
-        android:id="@+id/includeButtonCategory"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+    tools:context=".ui.fragments.CategoryFragment">
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerViewHeadlines"
+        android:id="@+id/recyclerViewCategory"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        tools:listitem="@layout/item_headlines"
+        android:layout_height="match_parent"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        app:layout_constraintTop_toBottomOf="@id/includeButtonCategory"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+        tools:listitem="@layout/item_headlines"/>
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="AppTheme" parent="Theme.MaterialComponents.Light.DarkActionBar">
+
+        <item name="colorPrimary">#ffffff</item>
+        <item name="colorSecondary">#f3f6fd</item>
+        <item name="android:colorBackground">@color/white</item>
+
+
+
+    </style>
+
+
+</resources>
